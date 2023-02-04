@@ -4,5 +4,6 @@ Idea of project based on this article [How we migrated entirely to CSS Modules u
 
 ## Support
 
- - [x] css class
+ - [x] className='App'
+ - [x] id='idSelector'
 

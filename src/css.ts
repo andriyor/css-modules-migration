@@ -12,7 +12,7 @@ export const getCssSelectors = (fileName: string) => {
   cssTree.walk(ast, function (node) {
     if (node.type === "Rule") {
       // @ts-ignore
-      classes.push(node.prelude?.value.replace(".", ""));
+      classes.push(node.prelude?.value.replace(".", "").replace('#', ''));
     }
   });
   return classes;
