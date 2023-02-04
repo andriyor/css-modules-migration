@@ -15,6 +15,7 @@ export const handleComponent = (
   cssSelectors: string[],
   reKey: string
 ) => {
+  console.log(cssSelectors);
   const sourceFile = project.addSourceFileAtPath(filePath);
   sourceFile.forEachDescendant((node) => {
     if (Node.isStringLiteral(node)) {
@@ -34,7 +35,9 @@ export const handleComponent = (
         const modulesRules = elementRules
           .map((rule) => `${DOLLAR_SIGN}{styles.${rule}}`)
           .join(" ");
-        const rulSet = `{${BACKTICK}${globalRules} ${modulesRules}${BACKTICK}}`;
+        const rulSet = `{${BACKTICK}${globalRules}${
+          globalRules ? " " : ""
+        }${modulesRules}${BACKTICK}}`;
         node.replaceWithText(rulSet);
       }
 
