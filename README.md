@@ -4,6 +4,7 @@ Idea of project based on this article [How we migrated entirely to CSS Modules u
 
 ## Support
 
- - [x] className='App'
- - [x] id='idSelector'
-
+- [x] `import './App.scss';` to `import styles from './App.module.scss';`
+- [x] `className='App'` to `className={styles.App}`
+- [x] `id='idSelector'` to `id={styles.idSelector}`
+- [x] `className='d-flex menu'` to `` className={`d-flex ${styles.menu}`} ``
