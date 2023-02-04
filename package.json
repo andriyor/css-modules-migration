@@ -1,0 +1,23 @@
+{
+  "name": "migrate-to-css-modules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "css-tree": "^2.3.1",
+    "sass": "^1.58.0",
+    "ts-morph": "^17.0.1",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "@types/css-tree": "^2.0.1",
+    "@types/node": "^18.11.18",
+    "prettier": "2.8.3"
+  }
+}
