@@ -5,8 +5,11 @@ import { addDotModule } from "./strings";
 import { getCssSelectors } from "./css";
 import { handleComponent } from "./component";
 
+const argv = require("yargs-parser")(process.argv.slice(2));
+
 const regexStr = "^(?!.*\\.(spec|test|module)\\.(scss|tsx)$).*\\.(scss|tsx)$";
-const dirsMeta = getDirectoriesRecursive("src", regexStr);
+
+const dirsMeta = getDirectoriesRecursive(argv.dir ? argv.dir : "src", regexStr);
 
 for (const dirMeta of dirsMeta) {
   for (const reKey in dirMeta.pairs) {
