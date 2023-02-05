@@ -15,34 +15,46 @@ export const handleComponent = (
   cssSelectors: string[],
   reKey: string
 ) => {
-  console.log(cssSelectors);
   const sourceFile = project.addSourceFileAtPath(filePath);
   sourceFile.forEachDescendant((node) => {
     if (Node.isStringLiteral(node)) {
+      const parent = node.getParent();
       const text = trimQuotes(node.getText());
-      const isCSSRule = cssSelectors.includes(text);
 
-      const rules = text.split(" ");
-      if (rules.length === 1) {
-        if (isCSSRule) {
-          node.replaceWithText(`{styles.${text}}`);
+      if (Node.isImportDeclaration(parent)) {
+        if (text.includes(`${reKey}.scss`)) {
+          node.replaceWithText(`styles from './${reKey}.module.scss'`);
         }
-      } else {
-        const [elementRules, global] = partition(rules, (rule) =>
-          cssSelectors.includes(rule)
-        );
-        const globalRules = global.join(" ");
-        const modulesRules = elementRules
-          .map((rule) => `${DOLLAR_SIGN}{styles.${rule}}`)
-          .join(" ");
-        const rulSet = `{${BACKTICK}${globalRules}${
-          globalRules ? " " : ""
-        }${modulesRules}${BACKTICK}}`;
-        node.replaceWithText(rulSet);
       }
 
-      if (text.includes(`${reKey}.scss`)) {
-        node.replaceWithText(`styles from './${reKey}.module.scss'`);
+      if (Node.isJsxAttribute(parent)) {
+        const rules = text.split(" ");
+
+        if (rules.length === 1) {
+          const isCSSRule = cssSelectors.includes(text);
+          if (isCSSRule) {
+            node.replaceWithText(`{styles.${text}}`);
+          }
+        } else {
+          const [elementRules, global] = partition(rules, (rule) =>
+            cssSelectors.includes(rule)
+          );
+          const globalRules = global.join(" ");
+          const modulesRules = elementRules
+            .map((rule) => `${DOLLAR_SIGN}{styles.${rule}}`)
+            .join(" ");
+          const rulSet = `{${BACKTICK}${globalRules}${
+            globalRules ? " " : ""
+          }${modulesRules}${BACKTICK}}`;
+          node.replaceWithText(rulSet);
+        }
+      }
+
+      if (Node.isArrayLiteralExpression(parent)) {
+        const isCSSRule = cssSelectors.includes(text);
+        if (isCSSRule) {
+          node.replaceWithText(`styles.${text}`);
+        }
       }
     }
   });
