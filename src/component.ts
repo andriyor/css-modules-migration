@@ -10,6 +10,14 @@ const project = new Project({
   tsConfigFilePath: "tsconfig.json",
 });
 
+
+const stylesAccess = (rule: string) => {
+  if (rule.includes('-')) {
+    return `styles["${rule}"]`;
+  }
+  return `styles.${rule}`;
+}
+
 export const handleComponent = (
   filePath: string,
   cssSelectors: string[],
@@ -33,7 +41,7 @@ export const handleComponent = (
         if (rules.length === 1) {
           const isCSSRule = cssSelectors.includes(text);
           if (isCSSRule) {
-            node.replaceWithText(`{styles.${text}}`);
+            node.replaceWithText(`{${stylesAccess(text)}}`);
           }
         } else {
           const [elementRules, global] = partition(rules, (rule) =>
@@ -41,7 +49,7 @@ export const handleComponent = (
           );
           const globalRules = global.join(" ");
           const modulesRules = elementRules
-            .map((rule) => `${DOLLAR_SIGN}{styles.${rule}}`)
+            .map((rule) => `${DOLLAR_SIGN}{${stylesAccess(rule)}}`)
             .join(" ");
           const rulSet = `{${BACKTICK}${globalRules}${
             globalRules ? " " : ""
@@ -53,7 +61,7 @@ export const handleComponent = (
       if (Node.isArrayLiteralExpression(parent)) {
         const isCSSRule = cssSelectors.includes(text);
         if (isCSSRule) {
-          node.replaceWithText(`styles.${text}`);
+          node.replaceWithText(stylesAccess(text));
         }
       }
     }

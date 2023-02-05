@@ -10,3 +10,4 @@ Idea of project based on this article [How we migrated entirely to CSS Modules u
 - [x] `className='selector1 selector2'` to `` className={`${styles.selector1} ${styles.selector2}`} ``
 - [x] `className='d-flex menu'` to `` className={`d-flex ${styles.menu}`} ``
 - [x] `className={["listRule1", "listRule2"].join(" ")}` to `className={[styles.listRule1, styles.listRule2].join(" ")}`
+- [x] `className="kebab-case"` to `className={styles["kebab-case"]}`
