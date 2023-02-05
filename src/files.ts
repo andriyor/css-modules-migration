@@ -27,10 +27,11 @@ export const getDirectoriesFiles = (dirPath: string, regexStr: string) => {
         prev.files.push(relativePath);
 
         const [base, ext] = getBaseExt(path.basename(relativePath));
-        if (prev.pairs[base]) {
-          prev.pairs[base][ext] = relativePath;
+        const stipPrefix = base.replace('.component', '').replace('.container', '')
+        if (prev.pairs[stipPrefix]) {
+          prev.pairs[stipPrefix][ext] = relativePath;
         } else {
-          prev.pairs[base] = {
+          prev.pairs[stipPrefix] = {
             [ext]: relativePath,
           };
         }
