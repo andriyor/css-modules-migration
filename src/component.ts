@@ -66,5 +66,5 @@ export const handleComponent = (
       }
     }
   });
-  sourceFile.save();
+  sourceFile.save().then();
 };
