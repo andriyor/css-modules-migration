@@ -2,8 +2,8 @@ import fs from "fs";
 
 import { getDirectoriesFiles, getDirectoriesRecursive } from "./files";
 import { addDotModule } from "./strings";
-import { getCssSelectors } from "./css";
-import { handleComponent } from "./component";
+import { getCssSelectors, removeUnusedCssSelector } from "./css";
+import { handleComponent, getAllJSXAttrString } from "./component";
 
 const argv = require("yargs-parser")(process.argv.slice(2));
 
@@ -25,10 +25,13 @@ for (const dirMeta of dirsMeta) {
       dirMeta.pairs[reKey].hasOwnProperty("scss") &&
       dirMeta.pairs[reKey].hasOwnProperty("tsx")
     ) {
-      const cssFilePath = dirMeta.pairs[reKey].scss;
-      const cssSelectors = getCssSelectors(cssFilePath);
-      handleComponent(dirMeta.pairs[reKey].tsx, cssSelectors, reKey);
-      fs.renameSync(cssFilePath, addDotModule(cssFilePath));
+      const allJSXAttrString = getAllJSXAttrString(dirMeta.pairs[reKey].tsx);
+      console.log(allJSXAttrString);
+      removeUnusedCssSelector(dirMeta.pairs[reKey].scss, allJSXAttrString)
+      // const cssFilePath = dirMeta.pairs[reKey].scss;
+      // const cssSelectors = getCssSelectors(cssFilePath);
+      // handleComponent(dirMeta.pairs[reKey].tsx, cssSelectors, reKey);
+      // fs.renameSync(cssFilePath, addDotModule(cssFilePath));
     }
   }
 }

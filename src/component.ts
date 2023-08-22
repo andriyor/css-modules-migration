@@ -10,13 +10,12 @@ const project = new Project({
   tsConfigFilePath: "tsconfig.json",
 });
 
-
 const stylesAccess = (rule: string) => {
-  if (rule.includes('-')) {
+  if (rule.includes("-")) {
     return `styles["${rule}"]`;
   }
   return `styles.${rule}`;
-}
+};
 
 export const handleComponent = (
   filePath: string,
@@ -67,4 +66,35 @@ export const handleComponent = (
     }
   });
   sourceFile.save().then();
+};
+
+export const getAllJSXAttrString = (filePath: string) => {
+  const sourceFile = project.addSourceFileAtPath(filePath);
+  const allJSXAttrString: string[] = [];
+  sourceFile.forEachDescendant((node) => {
+    if (Node.isStringLiteral(node)) {
+      const parent = node.getParent();
+      const text = trimQuotes(node.getText());
+
+      if (Node.isJsxAttribute(parent)) {
+        parent.forEachChild(node => {
+          if(Node.isIdentifier(node)) {
+            console.log(node.getText());
+          }
+        })
+        const rules = text.split(" ");
+
+        if (rules.length === 1) {
+          allJSXAttrString.push(text);
+        } else {
+          allJSXAttrString.push(...rules);
+        }
+      }
+
+      if (Node.isArrayLiteralExpression(parent)) {
+        allJSXAttrString.push(text);
+      }
+    }
+  });
+  return allJSXAttrString;
 };
