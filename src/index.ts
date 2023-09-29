@@ -9,26 +9,31 @@ const argv = require("yargs-parser")(process.argv.slice(2));
 
 const regexStr = "^(?!.*\\.(spec|test|module)\\.(scss|tsx)$).*\\.(scss|tsx)$";
 
-let dirsMeta = [];
 
-const destPath = argv.dir ? argv.dir : "src";
+export const migrate = (destPath: string, isRecursive?: boolean) => {
+  let dirsMeta = [];
 
-if (argv.r) {
-  dirsMeta = getDirectoriesRecursive(destPath, regexStr);
-} else {
-  dirsMeta = [getDirectoriesFiles(destPath, regexStr)];
-}
+  if (isRecursive) {
+    dirsMeta = getDirectoriesRecursive(destPath, regexStr);
+  } else {
+    dirsMeta = [getDirectoriesFiles(destPath, regexStr)];
+  }
 
-for (const dirMeta of dirsMeta) {
-  for (const reKey in dirMeta.pairs) {
-    if (
-      dirMeta.pairs[reKey].hasOwnProperty("scss") &&
-      dirMeta.pairs[reKey].hasOwnProperty("tsx")
-    ) {
-      const cssFilePath = dirMeta.pairs[reKey].scss;
-      const cssSelectors = getCssSelectors(cssFilePath);
-      handleComponent(dirMeta.pairs[reKey].tsx, cssSelectors, reKey);
-      fs.renameSync(cssFilePath, addDotModule(cssFilePath));
+
+  for (const dirMeta of dirsMeta) {
+    for (const reKey in dirMeta.pairs) {
+      if (
+        dirMeta.pairs[reKey].hasOwnProperty("scss") &&
+        dirMeta.pairs[reKey].hasOwnProperty("tsx")
+      ) {
+        const cssFilePath = dirMeta.pairs[reKey].scss;
+        const cssSelectors = getCssSelectors(cssFilePath);
+        handleComponent(dirMeta.pairs[reKey].tsx, cssSelectors, reKey);
+        fs.renameSync(cssFilePath, addDotModule(cssFilePath));
+      }
     }
   }
 }
+
+const destPath = argv.dir ? argv.dir : "src";
+migrate(destPath, argv.r)
