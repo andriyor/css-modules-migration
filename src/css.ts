@@ -1,5 +1,5 @@
 import sass from "sass";
-import cssTree from "css-tree";
+import * as cssTree from "css-tree";
 
 export const getCssSelectors = (fileName: string) => {
   const result = sass.compile(fileName);
@@ -8,6 +8,7 @@ export const getCssSelectors = (fileName: string) => {
     parseRulePrelude: false,
     parseValue: false,
   });
+
   const classes: string[] = [];
   cssTree.walk(ast, function (node) {
     if (node.type === "Rule") {

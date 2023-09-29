@@ -9,8 +9,8 @@ const argv = require("yargs-parser")(process.argv.slice(2));
 
 const regexStr = "^(?!.*\\.(spec|test|module)\\.(scss|tsx)$).*\\.(scss|tsx)$";
 
-
-export const migrate = (destPath: string, isRecursive?: boolean) => {
+export const getPairs = (destPath: string, isRecursive?: boolean) => {
+  const pairs: any = {};
   let dirsMeta = [];
 
   if (isRecursive) {
@@ -19,21 +19,30 @@ export const migrate = (destPath: string, isRecursive?: boolean) => {
     dirsMeta = [getDirectoriesFiles(destPath, regexStr)];
   }
 
-
   for (const dirMeta of dirsMeta) {
     for (const reKey in dirMeta.pairs) {
       if (
         dirMeta.pairs[reKey].hasOwnProperty("scss") &&
         dirMeta.pairs[reKey].hasOwnProperty("tsx")
       ) {
-        const cssFilePath = dirMeta.pairs[reKey].scss;
-        const cssSelectors = getCssSelectors(cssFilePath);
-        handleComponent(dirMeta.pairs[reKey].tsx, cssSelectors, reKey);
-        fs.renameSync(cssFilePath, addDotModule(cssFilePath));
+        pairs[reKey] = dirMeta.pairs[reKey];
       }
     }
   }
-}
+  return pairs;
+};
+
+export const migrate = (destPath: string, isRecursive?: boolean) => {
+  const pairs: any = getPairs(destPath, isRecursive);
+  console.log("pairs");
+  console.log(pairs);
+  for (const pairKey in pairs) {
+    const cssFilePath = pairs[pairKey].scss;
+    const cssSelectors = getCssSelectors(cssFilePath);
+    handleComponent(pairs[pairKey].tsx, cssSelectors, pairKey);
+    fs.renameSync(cssFilePath, addDotModule(cssFilePath));
+  }
+};
 
 const destPath = argv.dir ? argv.dir : "src";
-migrate(destPath, argv.r)
+migrate(destPath, argv.r);
