@@ -2,6 +2,10 @@
 
 Idea of project based on this article [How we migrated entirely to CSS Modules using codemods and Sourcegraph Code Insights](https://about.sourcegraph.com/blog/migrating-to-css-modules-with-codemods-and-code-insights)
 
+[sourcegraph/codemod: A collection of codemods powered by TS-Morph and PostCSS](https://github.com/sourcegraph/codemod)
+
+[add clsx as option for className by andriyor · Pull Request #189 · sourcegraph/codemod](https://github.com/sourcegraph/codemod/pull/189)
+
 ## Supported migrations
 
 - [x] `import './App.scss';` to `import styles from './App.module.scss';`
